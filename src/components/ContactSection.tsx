@@ -13,7 +13,7 @@ import emailjs from '@emailjs/browser';
 gsap.registerPlugin(ScrollTrigger);
 
 const EMAILJS_SERVICE_ID = 'service_bhqredh';
-const EMAILJS_TEMPLATE_ID = 'template_58rx79g';
+const EMAILJS_TEMPLATE_ID = 'template_963v3xy';
 const EMAILJS_PUBLIC_KEY = 'sPOHL2VPTnOGIulHe';
 
 const ContactSection = () => {
