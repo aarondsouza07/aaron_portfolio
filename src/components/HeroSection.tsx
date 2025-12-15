@@ -6,43 +6,35 @@ const HeroSection = () => {
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLButtonElement>(null);
-  const splineRef = useRef<HTMLDivElement>(null);
+  const splineWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const tl = gsap.timeline({ delay: 0.5 });
+    const tl = gsap.timeline({ delay: 0.3 });
 
-    // Headline animation
     tl.fromTo(
       headlineRef.current,
       { opacity: 0, y: 50, filter: 'blur(10px)' },
       { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power3.out' }
-    );
+    )
+      .fromTo(
+        subtitleRef.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+        '-=0.5'
+      )
+      .fromTo(
+        ctaRef.current,
+        { opacity: 0, scale: 0.9 },
+        { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.7)' },
+        '-=0.4'
+      )
+      .fromTo(
+        splineWrapperRef.current,
+        { opacity: 0, scale: 0.95 },
+        { opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out' },
+        '-=0.8'
+      );
 
-    // Subtitle animation
-    tl.fromTo(
-      subtitleRef.current,
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
-      '-=0.5'
-    );
-
-    // CTA animation
-    tl.fromTo(
-      ctaRef.current,
-      { opacity: 0, scale: 0.9 },
-      { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.7)' },
-      '-=0.4'
-    );
-
-    // Spline container animation
-    tl.fromTo(
-      splineRef.current,
-      { opacity: 0, scale: 0.8 },
-      { opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out' },
-      '-=0.8'
-    );
-
-    // Floating orbs animation
     gsap.to('.hero-orb', {
       y: -15,
       duration: 3,
@@ -52,36 +44,56 @@ const HeroSection = () => {
       stagger: 0.5,
     });
 
-    return () => {
-      tl.kill();
+    return () => tl.kill();
+  }, []);
+
+  /* Cursor-follow parallax for desktop only */
+  useEffect(() => {
+    if (!splineWrapperRef.current || 'ontouchstart' in window) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 8;
+      const y = (e.clientY / window.innerHeight - 0.5) * 6;
+
+      gsap.to(splineWrapperRef.current, {
+        rotateY: x,
+        rotateX: -y,
+        duration: 0.6,
+        ease: 'power3.out',
+      });
     };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   const scrollToContact = () => {
-    const element = document.querySelector('#contact');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <section
       ref={sectionRef}
       id="home"
-      className="relative h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Spline 3D Background - Full screen */}
+      {/* 3D Spline Hero (Load First) */}
       <div
-        ref={splineRef}
-        className="absolute inset-0 z-0"
+        ref={splineWrapperRef}
+        className="absolute inset-0 z-0 transition-all duration-500 will-change-transform hover:drop-shadow-[0_0_40px_rgba(0,200,255,0.35)]"
       >
         <iframe
           src="https://my.spline.design/orb-341cPqAuFeX3n65vnv8LlSOB/"
+          title="3D Spline Animation"
           frameBorder="0"
           width="100%"
           height="100%"
-          title="3D Spline Animation"
-          style={{ pointerEvents: 'auto' }}
+          loading="eager"
+          fetchPriority="high"
+          style={{
+            pointerEvents: 'auto',
+            transformStyle: 'preserve-3d',
+          }}
         />
       </div>
 
@@ -90,12 +102,14 @@ const HeroSection = () => {
       <div className="hero-orb floating-orb w-96 h-96 bottom-20 -right-32 opacity-30 z-10" />
       <div className="hero-orb floating-orb w-48 h-48 top-1/3 left-1/4 opacity-20 z-10" />
 
-      {/* Grid pattern overlay */}
+      {/* Grid overlay */}
       <div
-        className="absolute inset-0 opacity-5 z-10"
+        className="absolute inset-0 opacity-5 z-10 pointer-events-none"
         style={{
-          backgroundImage: `linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px),
-                           linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)`,
+          backgroundImage: `
+            linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)
+          `,
           backgroundSize: '100px 100px',
         }}
       />
@@ -111,8 +125,7 @@ const HeroSection = () => {
           ref={headlineRef}
           className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-4"
         >
-          Hi, I'm{' '}
-          <span className="text-primary glow-text">Aaron</span>
+          Hi, I'm <span className="text-primary glow-text">Aaron</span>
         </h1>
 
         <p
@@ -127,12 +140,16 @@ const HeroSection = () => {
           Specializing in modern web development, 3D animations, and interactive interfaces.
         </p>
 
-        <button ref={ctaRef} onClick={scrollToContact} className="glow-button text-lg px-8 py-4">
+        <button
+          ref={ctaRef}
+          onClick={scrollToContact}
+          className="glow-button text-lg px-8 py-4"
+        >
           Hire Me
         </button>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll Indicator */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20">
         <span className="text-xs text-muted-foreground tracking-widest uppercase">
           Scroll
