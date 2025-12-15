@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Heart } from '@phosphor-icons/react';
+import { Heart, GithubLogo } from '@phosphor-icons/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -87,10 +87,21 @@ const Footer = () => {
             </a>
           </nav>
 
-          {/* Copyright */}
-          <p className="text-sm text-muted-foreground flex items-center gap-1">
-            Made with <Heart size={16} weight="fill" className="text-primary" /> by Aaron
-          </p>
+          {/* GitHub + Copyright */}
+          <div className="flex items-center gap-6">
+            <a
+              href="https://github.com/aarondsouza07"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="skill-icon"
+              title="GitHub"
+            >
+              <GithubLogo size={24} weight="light" />
+            </a>
+            <p className="text-sm text-muted-foreground flex items-center gap-1">
+              Made with <Heart size={16} weight="fill" className="text-primary" /> by Aaron
+            </p>
+          </div>
         </div>
 
         <div className="mt-8 pt-8 border-t border-border/20 text-center">

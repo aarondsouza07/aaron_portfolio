@@ -6,20 +6,19 @@ import {
   FileCss,
   FileJs,
   Atom,
-  PenNib,
-  Database,
+  Sparkle,
 } from '@phosphor-icons/react';
-import avatarImage from '@/assets/aaron-avatar.png';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const PROFILE_IMAGE = 'https://i.postimg.cc/8C7G5ByS/IMG-0436.jpg';
 
 const skills = [
   { icon: FileHtml, label: 'HTML5', color: '#E34F26' },
   { icon: FileCss, label: 'CSS3', color: '#1572B6' },
   { icon: FileJs, label: 'JavaScript', color: '#F7DF1E' },
   { icon: Atom, label: 'React', color: '#61DAFB' },
-  { icon: PenNib, label: 'Design', color: '#F24E1E' },
-  { icon: Database, label: 'Database', color: '#47A248' },
+  { icon: Sparkle, label: 'GSAP', color: '#88CE02' },
 ];
 
 const AboutSection = () => {
@@ -120,7 +119,7 @@ const AboutSection = () => {
               <div className="glow-ring">
                 <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-background">
                   <img
-                    src={avatarImage}
+                    src={PROFILE_IMAGE}
                     alt="Aaron - Web Developer"
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   />
