@@ -21,7 +21,7 @@ const ContactSection = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  /* ✅ Initialize EmailJS once */
+  // ✅ Initialize EmailJS once
   useEffect(() => {
     emailjs.init(EMAILJS_PUBLIC_KEY);
   }, []);
@@ -71,22 +71,13 @@ const ContactSection = () => {
 
     setIsSubmitting(true);
 
-    gsap.to('.submit-btn', {
-      scale: 0.95,
-      duration: 0.1,
-      yoyo: true,
-      repeat: 1,
-    });
-
     try {
-      const result = await emailjs.sendForm(
+      await emailjs.sendForm(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         formRef.current,
-        { publicKey: EMAILJS_PUBLIC_KEY } // ✅ FIXED
+        { publicKey: EMAILJS_PUBLIC_KEY }
       );
-
-      console.log('EmailJS success:', result.text);
 
       toast({
         title: 'Message sent!',
@@ -94,13 +85,11 @@ const ContactSection = () => {
       });
 
       formRef.current.reset();
-    } catch (error: any) {
+    } catch (error) {
       console.error('EmailJS error:', error);
-
       toast({
         title: 'Failed to send message',
-        description:
-          'Something went wrong. Please try again or email me directly.',
+        description: 'Please try again later.',
         variant: 'destructive',
       });
     } finally {
@@ -115,7 +104,6 @@ const ContactSection = () => {
           {/* Contact Form */}
           <div className="glass-card p-8">
             <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-              {/* ✅ MATCH EMAILJS TEMPLATE VARIABLES */}
               <div className="contact-input">
                 <label className="block text-sm mb-2">Your Name</label>
                 <input
@@ -161,16 +149,33 @@ const ContactSection = () => {
             </form>
           </div>
 
-          {/* Right Side (unchanged UI) */}
-          {/* Keep your existing content here */}
+          {/* Contact Info */}
+          <div className="flex flex-col justify-center">
+            <p className="text-muted-foreground mb-4">
+              Or email me directly at
+            </p>
+            <a
+              href="mailto:aarondsouza747@gmail.com"
+              className="text-primary text-lg hover:underline"
+            >
+              aarondsouza747@gmail.com
+            </a>
+
+            <div className="flex gap-4 mt-6">
+              <a href="https://github.com/aarondsouza07" className="social-icon">
+                <GithubLogo size={24} />
+              </a>
+              <a href="https://linkedin.com" className="social-icon">
+                <LinkedinLogo size={24} />
+              </a>
+              <a href="https://twitter.com" className="social-icon">
+                <TwitterLogo size={24} />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-  );
-};
-
-export default ContactSection;
-
   );
 };
 
