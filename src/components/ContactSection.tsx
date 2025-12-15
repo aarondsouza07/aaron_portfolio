@@ -3,8 +3,13 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { GithubLogo, LinkedinLogo, TwitterLogo, PaperPlaneTilt } from '@phosphor-icons/react';
 import { toast } from '@/hooks/use-toast';
+import emailjs from '@emailjs/browser';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const EMAILJS_SERVICE_ID = 'service_bhqredh';
+const EMAILJS_TEMPLATE_ID = 'template_58rx79g';
+const EMAILJS_PUBLIC_KEY = 'sPOHL2VPTnOGIulHe';
 
 const ContactSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -58,6 +63,8 @@ const ContactSection = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formRef.current) return;
+    
     setIsSubmitting(true);
 
     // Animate submit button
@@ -68,18 +75,30 @@ const ContactSection = () => {
       repeat: 1,
     });
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_PUBLIC_KEY
+      );
 
-    toast({
-      title: 'Message sent!',
-      description: "Thank you for reaching out. I'll get back to you soon.",
-    });
+      toast({
+        title: 'Message sent!',
+        description: "Thank you for reaching out. I'll get back to you soon.",
+      });
 
-    if (formRef.current) {
       formRef.current.reset();
+    } catch (error) {
+      console.error('Email error:', error);
+      toast({
+        title: 'Error sending message',
+        description: 'Please try again later or contact me directly via email.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
 
   return (
@@ -193,10 +212,10 @@ const ContactSection = () => {
               <div className="mb-8">
                 <p className="text-sm text-muted-foreground mb-2">Email me at</p>
                 <a
-                  href="mailto:hello@aaron.dev"
+                  href="mailto:aarondsouza747@gmail.com"
                   className="text-xl font-medium text-primary hover:underline"
                 >
-                  hello@aaron.dev
+                  aarondsouza747@gmail.com
                 </a>
               </div>
 
@@ -207,7 +226,7 @@ const ContactSection = () => {
                 </p>
                 <div className="flex gap-4">
                   <a
-                    href="https://github.com"
+                    href="https://github.com/aarondsouza07"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="social-icon skill-icon"
