@@ -11,7 +11,7 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PROFILE_IMAGE = 'https://i.postimg.cc/8C7G5ByS/IMG-0436.jpg';
+const PROFILE_IMAGE = 'https://i.postimg.cc/Bvx3nNgH/HEIF-Image.avif';
 
 const skills = [
   { icon: FileHtml, label: 'HTML5', color: '#E34F26' },
